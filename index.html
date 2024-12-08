@@ -372,6 +372,40 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+
+      function saveData() {
+  const name = document.getElementById("name").value;
+  const age = document.getElementById("age").value;
+
+  // 获取数据库引用
+  const ref = database.ref("users");  // 访问 "users" 节点
+  const newUserRef = ref.push();  // 创建新用户的子节点
+  newUserRef.set({
+    name: name,
+    age: age
+  }).then(() => {
+    alert("Data saved successfully!");
+  }).catch((error) => {
+    console.error("Error saving data: ", error);
+  });
+}
+
+      function loadData() {
+  const ref = database.ref("users");  // 访问 "users" 节点
+  ref.on("value", (snapshot) => {
+    const users = snapshot.val();
+    const usersList = document.getElementById("users-list");
+    usersList.innerHTML = "";  // 清空现有内容
+
+    for (const userId in users) {
+      const user = users[userId];
+      const listItem = document.createElement("li");
+      listItem.textContent = `${user.name}, Age: ${user.age}`;
+      usersList.appendChild(listItem);
+    }
+  });
+}
+
 </script>
 
 </body>
